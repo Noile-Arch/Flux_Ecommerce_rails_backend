@@ -24,9 +24,20 @@ module Nubi
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
 
-    # Only loads a smaller set of middleware suitable for API only apps.
+    # Only loads a smaller set of middleware suitable for API-only apps.
     # Middleware like session, flash, cookies can be added back manually.
-    # Skip views, helpers and assets when generating a new resource.
+    # Skip views, helpers, and assets when generating a new resource.
     config.api_only = true
+
+    # CORS Configuration (Allow React Frontend to Access Rails API)
+    config.middleware.insert_before 0, Rack::Cors do
+      allow do
+        origins '*' # Change to your frontend domain in production (e.g., 'https://your-frontend.vercel.app')
+        resource '*',
+                 headers: :any,
+                 methods: [:get, :post, :put, :patch, :delete, :options],
+                 expose: ['Authorization']
+      end
+    end
   end
 end
